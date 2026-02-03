@@ -1,4 +1,4 @@
-# Noogle Search TV
+# Noogle Search 
 
 A terminal UI for searching and browsing [Noogle](https://noogle.dev) - the Nix function search engine. Search through Nix functions with fuzzy finding, preview documentation, and jump to source code.
 
@@ -13,26 +13,31 @@ A terminal UI for searching and browsing [Noogle](https://noogle.dev) - the Nix 
 
 ## Installation
 
-### Using Nix Flakes
+### Nix Flakes
 
-Add to your `flake.nix`:
+**Add to your flake inputs:**
 
 ```nix
 {
   inputs = {
     noogle-search.url = "github:argosnothing/noogle-search";
   };
-
-  outputs = { self, nixpkgs, noogle-search-tv }: {
-    # In your NixOS configuration or home-manager
-    environment.systemPackages = [
-      noogle-search.packages.${system}.default
-    ];
-  };
 }
 ```
 
-Or run directly:
+**Use in your configuration:**
+
+```nix
+# NixOS configuration.nix
+{ inputs, pkgs, ... }:
+{
+  environment.systemPackages = [
+    inputs.noogle-search.packages.${pkgs.system}.default
+  ];
+}
+```
+
+**Or run directly:**
 
 ```bash
 nix run github:argosnothing/noogle-search
@@ -42,7 +47,7 @@ nix run github:argosnothing/noogle-search
 
 ```bash
 nix build
-./result/bin/noogle-search-tv search
+./result/bin/noogle-search search
 ```
 
 ## Usage
@@ -54,13 +59,13 @@ Start the search interface:
 noogle-search
 
 # Start with lib namespace filtered
-noogle-search lib
+noogle-search filter lib
 
 # Start with builtins namespace filtered
-noogle-search builtins
+noogle-search filter builtins
 
 # Start with pkgs namespace filtered
-noogle-search pkgs
+noogle-search filter pkgs
 ```
 
 ### Keybinds

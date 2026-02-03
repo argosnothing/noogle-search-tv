@@ -4,28 +4,45 @@ mod data;
 mod format;
 
 use anyhow::Result;
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
 use std::io::{self, ErrorKind};
 
+#[derive(Debug, Clone, ValueEnum)]
+enum Namespace {
+    Lib,
+    Builtins,
+    Pkgs,
+}
+
+impl Namespace {
+    fn as_str(&self) -> &str {
+        match self {
+            Namespace::Lib => "lib",
+            Namespace::Builtins => "builtins",
+            Namespace::Pkgs => "pkgs",
+        }
+    }
+}
+
 #[derive(Parser)]
-#[command(name = "noogle-search-tv")]
+#[command(name = "noogle-search")]
 #[command(about = "Search Noogle functions for television/fzf")]
 struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    command: Option<Commands>,
 }
 
 #[derive(Subcommand)]
 enum Commands {
+    Filter {
+        namespace: Namespace,
+    },
     Print {
         #[arg(long)]
         filter: Option<String>,
     },
     Preview {
         name: String,
-    },
-    Search {
-        filter: Option<String>,
     },
     OpenSource {
         name: String,
@@ -57,27 +74,27 @@ fn run() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Search { filter } => {
-            commands::search::execute(filter)?;
+        Some(Commands::Filter { namespace }) => {
+            commands::search::execute(Some(namespace.as_str().to_string()))?;
         }
-        _ => {
+        Some(Commands::Print { filter }) => {
             let response = cache::load_data()?;
-
-            match cli.command {
-                Commands::Print { filter } => {
-                    commands::print::execute(&response, filter.as_deref());
-                }
-                Commands::Preview { name } => {
-                    commands::preview::execute(&response, &name)?;
-                }
-                Commands::OpenSource { name } => {
-                    commands::open_source::execute(&response, &name)?;
-                }
-                Commands::OpenNoogle { name } => {
-                    commands::open_noogle::execute(&response, &name)?;
-                }
-                Commands::Search { .. } => unreachable!(),
-            }
+            commands::print::execute(&response, filter.as_deref());
+        }
+        Some(Commands::Preview { name }) => {
+            let response = cache::load_data()?;
+            commands::preview::execute(&response, &name)?;
+        }
+        Some(Commands::OpenSource { name }) => {
+            let response = cache::load_data()?;
+            commands::open_source::execute(&response, &name)?;
+        }
+        Some(Commands::OpenNoogle { name }) => {
+            let response = cache::load_data()?;
+            commands::open_noogle::execute(&response, &name)?;
+        }
+        None => {
+            commands::search::execute(None)?;
         }
     }
 

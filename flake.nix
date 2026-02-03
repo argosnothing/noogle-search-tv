@@ -16,7 +16,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in {
         packages.default = pkgs.rustPlatform.buildRustPackage {
-          pname = "noogle-search-tv";
+          pname = "noogle-search";
           version = "0.1.0";
           src = ./.;
 
@@ -28,11 +28,7 @@
           buildInputs = [pkgs.openssl.dev];
 
           postInstall = ''
-            wrapProgram $out/bin/noogle-search-tv \
-              --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.bat pkgs.fzf]}
-
-            makeWrapper $out/bin/noogle-search-tv $out/bin/noogle-search \
-              --add-flags search \
+            wrapProgram $out/bin/noogle-search \
               --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.bat pkgs.fzf]}
           '';
 
@@ -41,10 +37,6 @@
             mainProgram = "noogle-search";
           };
         };
-
-        packages.noogle-search = pkgs.writeShellScriptBin "noogle-search" ''
-          exec ${self.packages.${system}.default}/bin/noogle-search-tv search
-        '';
 
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
