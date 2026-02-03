@@ -12,6 +12,10 @@ A terminal UI for searching and browsing [Noogle](https://noogle.dev) - the Nix 
 - **Offline caching** - data cached for 24 hours
 - **Syntax highlighting** via bat
 
+## Try It!
+```bash
+nix run github:argosnothing/noogle-search
+```
 ## Installation
 
 ### Nix Flakes
@@ -38,11 +42,7 @@ A terminal UI for searching and browsing [Noogle](https://noogle.dev) - the Nix 
 }
 ```
 
-**Or run directly:**
 
-```bash
-nix run github:argosnothing/noogle-search
-```
 
 ## Usage
 
