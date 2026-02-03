@@ -6,30 +6,41 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-  }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
     flake-utils.lib.eachDefaultSystem (
-      system: let
+      system:
+      let
         pkgs = nixpkgs.legacyPackages.${system};
-      in {
+      in
+      {
         packages.default = pkgs.rustPlatform.buildRustPackage {
           pname = "noogle-search";
-          version = "0.1.0";
+          version = "0.2.0";
           src = ./.;
 
           cargoLock = {
             lockFile = ./Cargo.lock;
           };
 
-          nativeBuildInputs = [pkgs.makeWrapper pkgs.pkg-config];
-          buildInputs = [pkgs.openssl.dev];
+          nativeBuildInputs = [
+            pkgs.makeWrapper
+            pkgs.pkg-config
+          ];
+          buildInputs = [ pkgs.openssl.dev ];
 
           postInstall = ''
             wrapProgram $out/bin/noogle-search \
-              --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.bat pkgs.fzf]}
+              --prefix PATH : ${
+                pkgs.lib.makeBinPath [
+                  pkgs.bat
+                  pkgs.fzf
+                ]
+              }
           '';
 
           meta = {
