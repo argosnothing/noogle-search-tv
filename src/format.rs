@@ -9,13 +9,12 @@ pub fn print_preview(doc: &Doc) {
     if let Some(sig) = &doc.meta.signature {
         println!("{}", "Type Signature:".yellow().bold());
         highlight_code(sig.trim(), "nix");
-        println!();
+        println!("\n");
     }
 
     if let Some(lambda) = &doc.meta.lambda_expr {
         println!("{}", "Definition:".yellow().bold());
         highlight_code(lambda, "nix");
-        println!();
     }
 
     if let Some(content) = &doc.content {
@@ -64,38 +63,70 @@ fn highlight_code(code: &str, lang: &str) {
             return;
         }
     }
-    println!("  {}", code);
+    print!("{}", code);
 }
 
 fn print_content(text: &str) {
     let mut in_code_block = false;
     let mut code_buffer = String::new();
+    let mut last_was_empty = false;
+    let mut last_was_heading = false;
+    let mut skip_next_usage_line = false;
 
     for line in text.lines() {
         let trimmed = line.trim();
 
-        if trimmed.starts_with("```nix") {
-            in_code_block = true;
-            code_buffer.clear();
-        } else if trimmed == "```" && in_code_block {
-            in_code_block = false;
-            if !code_buffer.is_empty() {
-                highlight_code(&code_buffer, "nix");
+        if trimmed.starts_with("```nix") || trimmed.starts_with("```") && trimmed.len() == 3 {
+            if !in_code_block {
+                in_code_block = true;
+                code_buffer.clear();
+            } else {
+                in_code_block = false;
+                if !code_buffer.is_empty() {
+                    let trimmed_code = code_buffer.trim();
+                    highlight_code(trimmed_code, "nix");
+                    println!();
+                }
             }
+            last_was_heading = false;
+            skip_next_usage_line = false;
         } else if in_code_block {
             code_buffer.push_str(line);
             code_buffer.push('\n');
         } else if trimmed.starts_with(":::") {
             continue;
+        } else if trimmed.is_empty() {
+            if !last_was_empty && !last_was_heading {
+                println!();
+                last_was_empty = true;
+            }
+            last_was_heading = false;
+        } else if skip_next_usage_line && trimmed.contains("usage example") {
+            skip_next_usage_line = false;
+            continue;
         } else if trimmed.starts_with(": ") {
             let content = trimmed.trim_start_matches(": ");
             println!("  - {}", strip_inline_code(content));
+            last_was_empty = false;
+            last_was_heading = false;
+            skip_next_usage_line = false;
         } else if trimmed.starts_with("# ") {
-            println!("\n{}", strip_inline_code(trimmed.trim_start_matches("# ")).yellow().bold());
+            let heading = trimmed.trim_start_matches("# ");
+            println!("{}", strip_inline_code(heading).yellow().bold());
+            last_was_empty = false;
+            last_was_heading = true;
+            skip_next_usage_line = heading == "Examples";
         } else if trimmed.starts_with("## ") {
-            println!("\n{}", strip_inline_code(trimmed.trim_start_matches("## ")).yellow());
+            let heading = trimmed.trim_start_matches("## ");
+            println!("{}", strip_inline_code(heading).yellow());
+            last_was_empty = false;
+            last_was_heading = true;
+            skip_next_usage_line = heading == "Examples";
         } else {
             println!("{}", strip_inline_code(line));
+            last_was_empty = false;
+            last_was_heading = false;
+            skip_next_usage_line = false;
         }
     }
 }
