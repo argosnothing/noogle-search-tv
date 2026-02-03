@@ -11,6 +11,8 @@ pub fn execute() -> Result<()> {
             &format!("{} preview {{}}", exe_path.display()),
             "--preview-window=wrap",
             "--scheme=history",
+            "--bind",
+            &format!("ctrl-o:execute({} open-source {{}})", exe_path.display()),
         ])
         .stdin(Command::new(&exe_path)
             .arg("print")

@@ -20,6 +20,7 @@ enum Commands {
     Print,
     Preview { name: String },
     Search,
+    OpenSource { name: String },
 }
 
 fn main() -> Result<()> {
@@ -56,6 +57,9 @@ fn run() -> Result<()> {
                 }
                 Commands::Preview { name } => {
                     commands::preview::execute(&response, &name)?;
+                }
+                Commands::OpenSource { name } => {
+                    commands::open_source::execute(&response, &name)?;
                 }
                 Commands::Search => unreachable!(),
             }
