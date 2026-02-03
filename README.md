@@ -5,7 +5,8 @@ A terminal UI for searching and browsing [Noogle](https://noogle.dev) - the Nix 
 ## Features
 
 - **Fuzzy search** through all Nix functions using fzf
-- **Namespace filtering** - filter by lib, builtins, or pkgs with a single keypress
+- **Flexible filtering** - filter by any namespace prefix
+- **Initial query** - start with a search term pre-populated
 - **Live preview** of function documentation, type signatures, and examples
 - **Quick navigation**: Jump to GitHub source code (Ctrl-O) or Noogle page (Ctrl-N)
 - **Offline caching** - data cached for 24 hours
@@ -51,14 +52,23 @@ Start the search interface:
 # Search all namespaces
 noogle-search
 
-# Start with lib namespace filtered
-noogle-search filter lib
+# Start with a search query
+noogle-search shell
 
-# Start with builtins namespace filtered
-noogle-search filter builtins
+# Filter to lib namespace
+noogle-search -f lib
 
-# Start with pkgs namespace filtered
-noogle-search filter pkgs
+# Filter to lib namespace with initial query
+noogle-search -f lib shell
+
+# Filter to any prefix (e.g., lib.strings)
+noogle-search -f lib.strings trim
+
+# Filter to builtins
+noogle-search -f builtins
+
+# Filter to pkgs
+noogle-search -f pkgs
 ```
 
 ### Keybinds
@@ -74,14 +84,16 @@ noogle-search filter pkgs
 - **Ctrl-N**: Open function page on Noogle.dev
 - **Ctrl-/**: Toggle preview pane
 
-### Namespace Filtering
+### Filtering
 
-When you apply a namespace filter:
-- Only functions from that namespace are shown
-- The namespace prefix is stripped from the display (e.g., "optionalString" instead of "lib.optionalString")
+When you apply a filter with `-f` or `--filter`:
+- Only functions matching that prefix are shown
+- The prefix is stripped from the display (e.g., "optionalString" instead of "lib.optionalString")
+- You can filter by any prefix, not just top-level namespaces
 - Functions are matched by their primary title, not aliases from other namespaces
 
-### Notes for impermanence.
+### Notes for impermanence
+
 `noogle-search` uses a cache to avoid excessive calls to noogle on a 24h timer in `~/.cache/noogle-search`
 
 ## Credits
