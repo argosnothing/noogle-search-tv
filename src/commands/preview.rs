@@ -1,14 +1,9 @@
 use crate::data::NoogleResponse;
 use crate::format;
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 
-pub fn execute(response: &NoogleResponse, name: &str) -> Result<()> {
-    let doc = response
-        .data
-        .iter()
-        .find(|d| d.matches_name(name))
-        .ok_or_else(|| anyhow!("Function '{}' not found", name))?;
-
+pub fn execute(response: &NoogleResponse, input: &str) -> Result<()> {
+    let doc = super::util::find_doc(response, input)?;
     format::print_preview(doc);
     Ok(())
 }

@@ -17,11 +17,20 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    Print,
-    Preview { name: String },
+    Print {
+        #[arg(long)]
+        filter: Option<String>,
+    },
+    Preview {
+        name: String,
+    },
     Search,
-    OpenSource { name: String },
-    OpenNoogle { name: String },
+    OpenSource {
+        name: String,
+    },
+    OpenNoogle {
+        name: String,
+    },
 }
 
 fn main() -> Result<()> {
@@ -53,8 +62,8 @@ fn run() -> Result<()> {
             let response = cache::load_data()?;
 
             match cli.command {
-                Commands::Print => {
-                    commands::print::execute(&response);
+                Commands::Print { filter } => {
+                    commands::print::execute(&response, filter.as_deref());
                 }
                 Commands::Preview { name } => {
                     commands::preview::execute(&response, &name)?;

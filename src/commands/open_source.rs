@@ -2,19 +2,15 @@ use crate::data::NoogleResponse;
 use anyhow::{Result, anyhow};
 use std::process::Command;
 
-pub fn execute(response: &NoogleResponse, name: &str) -> Result<()> {
-    let doc = response
-        .data
-        .iter()
-        .find(|d| d.matches_name(name))
-        .ok_or_else(|| anyhow!("Function '{}' not found", name))?;
+pub fn execute(response: &NoogleResponse, input: &str) -> Result<()> {
+    let doc = super::util::find_doc(response, input)?;
 
     let position = doc
         .meta
         .lambda_position
         .as_ref()
         .or(doc.meta.attr_position.as_ref())
-        .ok_or_else(|| anyhow!("No source position available for '{}'", name))?;
+        .ok_or_else(|| anyhow!("No source position available"))?;
 
     let rev = &response.upstream_info.rev;
 
