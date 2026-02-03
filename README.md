@@ -43,13 +43,6 @@ A terminal UI for searching and browsing [Noogle](https://noogle.dev) - the Nix 
 nix run github:argosnothing/noogle-search
 ```
 
-### Building from source
-
-```bash
-nix build
-./result/bin/noogle-search search
-```
-
 ## Usage
 
 Start the search interface:
@@ -88,16 +81,8 @@ When you apply a namespace filter:
 - The namespace prefix is stripped from the display (e.g., "optionalString" instead of "lib.optionalString")
 - Functions are matched by their primary title, not aliases from other namespaces
 
-## Example Output
-
-When you select a function like `lib.strings.optionalString`, you'll see:
-
-- Type signature
-- Function definition
-- Documentation with inputs/outputs
-- Usage examples
-- Source location
-- Aliases
+### Notes for impermanence.
+`noogle-search` uses a cache to avoid excessive calls to noogle on a 24h timer in `~/.cache/noogle-search-tv`
 
 ## Credits
 
