@@ -88,13 +88,18 @@ fn print_content(text: &str) {
         } else if trimmed.starts_with(":::") {
             continue;
         } else if trimmed.starts_with(": ") {
-            println!("  - {}", trimmed.trim_start_matches(": "));
+            let content = trimmed.trim_start_matches(": ");
+            println!("  - {}", strip_inline_code(content));
         } else if trimmed.starts_with("# ") {
-            println!("\n{}", trimmed.trim_start_matches("# ").yellow().bold());
+            println!("\n{}", strip_inline_code(trimmed.trim_start_matches("# ")).yellow().bold());
         } else if trimmed.starts_with("## ") {
-            println!("\n{}", trimmed.trim_start_matches("## ").yellow());
+            println!("\n{}", strip_inline_code(trimmed.trim_start_matches("## ")).yellow());
         } else {
-            println!("{}", line);
+            println!("{}", strip_inline_code(line));
         }
     }
+}
+
+fn strip_inline_code(text: &str) -> String {
+    text.replace('`', "")
 }
