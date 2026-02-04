@@ -7,6 +7,7 @@
   makeWrapper,
   bat,
   fzf,
+  xdg-utils,
 }:
 rustPlatform.buildRustPackage rec {
   pname = "noogle-search";
@@ -32,7 +33,7 @@ rustPlatform.buildRustPackage rec {
 
   postInstall = ''
     wrapProgram $out/bin/noogle-search \
-      --prefix PATH : ${lib.makeBinPath [bat fzf]}
+      --prefix PATH : ${lib.makeBinPath [bat fzf xdg-utils]}
   '';
 
   meta = {
