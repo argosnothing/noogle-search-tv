@@ -17,7 +17,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "argosnothing";
     repo = "noogle-search";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-cfTJf/j9xP/lQ9YgMoJa9dkOYzTUtLoKgkV6XIKYiMc=";
+    hash = "sha256-yWGvprpIph+890OoRgb7vRo2/HpK3EPPoQwPdduhT6U=";
   };
 
   cargoHash = "sha256-axqFE5ZEiVP8PzFTtW5mbyyYcR4q9g3LX/0i6y+cgy8=";
