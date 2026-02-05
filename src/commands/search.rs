@@ -47,6 +47,8 @@ pub fn execute(initial_filter: Option<String>, initial_query: Option<String>) ->
         format!("ctrl-p:reload({} print --filter pkgs)", exe_path.display()),
         "--bind".to_string(),
         format!("ctrl-a:reload({} print)", exe_path.display()),
+        "--bind".to_string(),
+        "ctrl-/:toggle-preview".to_string(),
         "--header".to_string(),
         "Ctrl-L: lib | Ctrl-B: builtins | Ctrl-P: pkgs | Ctrl-A: all\nCtrl-O: source | Ctrl-N: noogle | Ctrl-/: preview".to_string(),
     ];
