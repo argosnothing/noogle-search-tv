@@ -2,6 +2,8 @@
 
 A terminal UI for searching and browsing [Noogle](https://noogle.dev) - the Nix function search engine. Search through Nix functions with fuzzy finding, preview documentation, and jump to source code.
 
+![tmp O7pKaesVCx](https://github.com/user-attachments/assets/5dc04a3c-6133-4801-a0df-08e9bbca4d0a)
+
 ## Features
 
 - **Fuzzy search** through all Nix functions using fzf
