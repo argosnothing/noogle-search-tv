@@ -1,6 +1,6 @@
 # Noogle Search 
 
-Update: just save yourself the trouble and use [nix-search-tv)(https://github.com/3timeslazy/nix-search-tv) as that now supports noogle search, and gives you a bunch of other stuffs :p
+Update: just save yourself the trouble and use [nix-search-tv](https://github.com/3timeslazy/nix-search-tv) as that now supports noogle search, and gives you a bunch of other stuffs :p
 
 A terminal UI for searching and browsing [Noogle](https://noogle.dev) - the Nix function search engine. Search through Nix functions with fuzzy finding, preview documentation, and jump to source code.
 
